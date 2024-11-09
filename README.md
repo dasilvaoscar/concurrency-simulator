@@ -1,4 +1,4 @@
-![Captura de tela de 2024-11-08 23-42-45](https://github.com/user-attachments/assets/62c3ab9e-a42d-427a-9c11-3a05958271ee)# Concurrency Simulator
+# Concurrency Simulator
 
 ## Descrição 
 
