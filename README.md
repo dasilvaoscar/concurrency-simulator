@@ -1,4 +1,4 @@
-# Concurrency Simulator
+![Captura de tela de 2024-11-08 23-42-45](https://github.com/user-attachments/assets/62c3ab9e-a42d-427a-9c11-3a05958271ee)# Concurrency Simulator
 
 ## Descrição 
 
@@ -50,3 +50,9 @@ Como o objetivo desse projeto é apenas testar minhas capacidades técnicas em e
 **Riscos:**
 - O simulador pode se tornar mais complexo do que o esperado, desviando o foco dos objetivos iniciais e exigindo mais esforço para atender os requisitos de baixa latência e alta disponibilidade.
 - A escolha arbitrária de tecnologias pode não refletir o ambiente de produção que será usado futuramente, limitando a transferência dos aprendizados para um sistema real.
+
+## High Level Architecture
+
+- [High Level Architecture Link](https://miro.com/welcomeonboard/Ymx1M214YVEyTHpNU3BFYmVHSXV0bEVNeDhvWU10allDUjJ1Smc4eGlOcjljbEZBRldETFJrbFd1WGRZUUtVMlhRTW54Ujd5UEtEQ3BsbVFxcGo4R1lmd0xrMTVwc0ljUkQ2OU9lU2x6T2Y3RUtZczJpZGQzTStuY0l2TGZ6L0chZQ==?share_link_id=599870259324)
+
+![Captura de tela de 2024-11-08 23-42-45](https://github.com/user-attachments/assets/aefeabd5-20f8-4e6e-a1ef-0a8cbf386b22)
