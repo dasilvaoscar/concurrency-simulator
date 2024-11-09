@@ -11,6 +11,7 @@ Api com algum recurso simulado para simular um cenário de concorrência.
 | ID       | Descrição                                                                 |
 |----------|---------------------------------------------------------------------------|
 | RF-001   | deve receber um post e criar um regístro de pagamento                     |
+| RF-002   | enviar push notifications com o status do pagamento                        |
 
 ### Não funcionais
 
@@ -55,4 +56,8 @@ Como o objetivo desse projeto é apenas testar minhas capacidades técnicas em e
 
 - [High Level Architecture Link](https://miro.com/welcomeonboard/Ymx1M214YVEyTHpNU3BFYmVHSXV0bEVNeDhvWU10allDUjJ1Smc4eGlOcjljbEZBRldETFJrbFd1WGRZUUtVMlhRTW54Ujd5UEtEQ3BsbVFxcGo4R1lmd0xrMTVwc0ljUkQ2OU9lU2x6T2Y3RUtZczJpZGQzTStuY0l2TGZ6L0chZQ==?share_link_id=599870259324)
 
-![Captura de tela de 2024-11-08 23-42-45](https://github.com/user-attachments/assets/aefeabd5-20f8-4e6e-a1ef-0a8cbf386b22)
+![image](https://github.com/user-attachments/assets/d80b429b-4e51-4925-aeb7-c75e736809ee)
+![image](https://github.com/user-attachments/assets/3ac40e56-e256-4a2c-9a48-1557cd8f9e33)
+
+
+
