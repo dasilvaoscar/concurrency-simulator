@@ -33,8 +33,5 @@ Api com algum recurso simulado para simular um cenário de concorrência.
 
 - [High Level Architecture Link](https://miro.com/welcomeonboard/Ymx1M214YVEyTHpNU3BFYmVHSXV0bEVNeDhvWU10allDUjJ1Smc4eGlOcjljbEZBRldETFJrbFd1WGRZUUtVMlhRTW54Ujd5UEtEQ3BsbVFxcGo4R1lmd0xrMTVwc0ljUkQ2OU9lU2x6T2Y3RUtZczJpZGQzTStuY0l2TGZ6L0chZQ==?share_link_id=599870259324)
 
-![image](https://github.com/user-attachments/assets/d80b429b-4e51-4925-aeb7-c75e736809ee)
-![image](https://github.com/user-attachments/assets/3ac40e56-e256-4a2c-9a48-1557cd8f9e33)
-
-
-
+![Captura de tela de 2024-11-10 22-11-03](https://github.com/user-attachments/assets/9ad89638-0c65-44a8-ba72-fd0c898898a3)
+![Captura de tela de 2024-11-10 22-12-16](https://github.com/user-attachments/assets/c9b959c5-e8ba-4f42-a86f-1a942a10b476)
