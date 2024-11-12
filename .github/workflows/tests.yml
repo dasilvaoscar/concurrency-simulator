@@ -19,10 +19,10 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.22.5' # Altere para a versão desejada do Go
+          go-version: '1.22.5'
 
       - name: Install dependencies
         run: go mod download
 
-      - name: Run unit tests
-        run: go test ./tests/unit/**/*
+      - name: Run antifraud unit tests
+        run: go test ./monorepo/antifraud/tests/unit/**/*
