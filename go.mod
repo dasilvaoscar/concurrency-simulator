@@ -1,4 +1,4 @@
-module monorepo
+module concurrency-simulator
 
 go 1.22.5
 

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"monorepo/antifraud/internal/services"
+	"concurrency-simulator/monorepo/antifraud/internal/services"
 )
 
 func TestValidateAntifraudWithValidData(t *testing.T) {

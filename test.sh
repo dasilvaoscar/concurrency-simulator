@@ -1,4 +1,4 @@
 #!/bin/sh
 
 echo "Running antifraud unit tests"
-go test ./antifraud/tests/unit/... -v
+go test ./monorepo/antifraud/tests/unit/... -v
