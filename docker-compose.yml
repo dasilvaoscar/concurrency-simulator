@@ -4,8 +4,11 @@ services:
     container_name: antifraud-svc
     build:
       context: .
+      dockerfile: Dockerfile.dev
       args:
         - REPOSITORY_NAME=./monorepo/antifraud
+    volumes:
+        - ./monorepo/antifraud/:/usr/src/app
     networks:
       - concurrency-simulator-network
     ports:
@@ -15,8 +18,11 @@ services:
     container_name: core-svc
     build:
       context: .
+      dockerfile: Dockerfile.dev
       args:
         - REPOSITORY_NAME=./monorepo/core
+    volumes:
+        - ./monorepo/core/:/usr/src/app        
     networks:
       - concurrency-simulator-network
     ports:
@@ -26,8 +32,11 @@ services:
     container_name: customer-svc
     build:
       context: .
+      dockerfile: Dockerfile.dev
       args:
         - REPOSITORY_NAME=./monorepo/customer
+    volumes:
+        - ./monorepo/customer/:/usr/src/app        
     networks:
       - concurrency-simulator-network
     ports:
@@ -37,8 +46,11 @@ services:
     container_name: notification-svc
     build:
       context: .
+      dockerfile: Dockerfile.dev
       args:
         - REPOSITORY_NAME=./monorepo/notification
+    volumes:
+        - ./monorepo/notification/:/usr/src/app          
     networks:
       - concurrency-simulator-network
     ports:
@@ -48,8 +60,11 @@ services:
     container_name: transaction-svc
     build:
       context: .
+      dockerfile: Dockerfile.dev
       args:
         - REPOSITORY_NAME=./monorepo/transaction
+    volumes:
+        - ./monorepo/transaction/:/usr/src/app            
     networks:
       - concurrency-simulator-network
     ports:

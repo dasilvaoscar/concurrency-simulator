@@ -1,0 +1,15 @@
+
+FROM golang:1.23.3
+
+ARG REPOSITORY_NAME
+
+WORKDIR /usr/src/app
+
+COPY ${REPOSITORY_NAME:-.} ./
+
+RUN go mod download
+
+RUN go install github.com/air-verse/air@latest
+
+# Comando de execução usando o Air
+CMD ["air"]
