@@ -24,7 +24,7 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/core
     volumes:
-        - ./monorepo/antifraud/:/usr/src/app
+        - ./monorepo/core/:/usr/src/app
         - ./go.mod/:/usr/src/app/go.mod
         - ./go.sum/:/usr/src/app/go.sum
     networks:
@@ -40,7 +40,7 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/customer
     volumes:
-        - ./monorepo/antifraud/:/usr/src/app
+        - ./monorepo/customer/:/usr/src/app
         - ./go.mod/:/usr/src/app/go.mod
         - ./go.sum/:/usr/src/app/go.sum    
     networks:
@@ -56,7 +56,7 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/notification
     volumes:
-        - ./monorepo/antifraud/:/usr/src/app
+        - ./monorepo/notification/:/usr/src/app
         - ./go.mod/:/usr/src/app/go.mod
         - ./go.sum/:/usr/src/app/go.sum       
     networks:
@@ -72,7 +72,7 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/transaction
     volumes:
-        - ./monorepo/antifraud/:/usr/src/app
+        - ./monorepo/transaction/:/usr/src/app
         - ./go.mod/:/usr/src/app/go.mod
         - ./go.sum/:/usr/src/app/go.sum          
     networks:

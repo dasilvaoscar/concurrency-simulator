@@ -41,8 +41,9 @@ Api com algum recurso simulado para simular um cenário de concorrência.
 ## Ambientes Docker
 
 
-- Inicia todos os serviços  `docker compose up`
-- Inicia um serviço especifico  `docker compose up [nome do serviço] `
+- Para iniciar e criar as imagens, use o comando `docker compose up --build`
+- Para iniciar todos os serviços, use o comando  `docker compose up`
+- Para iniciar um serviço especifico, use o comando  `docker compose up [nome do serviço] `
 
 | Service name      | Port |
 |-------------------|------|
