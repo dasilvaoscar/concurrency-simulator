@@ -8,7 +8,7 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/antifraud
     environment:
-      - PORT=8081
+      - HTTP_SERVER_PORT=8081
       - SERVICE_NAME=antifraud-svc
     volumes:
         - ./monorepo/antifraud/:/usr/src/app
@@ -27,7 +27,7 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/core
     environment:
-      - PORT=8082
+      - HTTP_SERVER_PORT=8082
       - SERVICE_NAME=core-svc        
     volumes:
         - ./monorepo/core/:/usr/src/app
@@ -46,7 +46,7 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/customer
     environment:
-      - PORT=8083
+      - HTTP_SERVER_PORT=8083
       - SERVICE_NAME=customer-svc           
     volumes:
         - ./monorepo/customer/:/usr/src/app
@@ -65,7 +65,7 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/notification
     environment:
-      - PORT=8084
+      - HTTP_SERVER_PORT=8084
       - SERVICE_NAME=notification-svc          
     volumes:
         - ./monorepo/notification/:/usr/src/app
@@ -84,7 +84,7 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/transaction
     environment:
-      - PORT=8085
+      - HTTP_SERVER_PORT=8085
       - SERVICE_NAME=transaction-sv        
     volumes:
         - ./monorepo/transaction/:/usr/src/app

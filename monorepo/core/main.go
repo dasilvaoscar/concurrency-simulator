@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-    serverPort := os.Getenv("PORT");
+    serverPort := os.Getenv("HTTP_SERVER_PORT");
     serviceName := os.Getenv("SERVICE_NAME");
 
     fmt.Printf("[%s]: is running on port %s\n", strings.ToUpper(serviceName), serverPort)
