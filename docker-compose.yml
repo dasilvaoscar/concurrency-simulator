@@ -1,0 +1,60 @@
+version: '3'
+services:
+  antifraud:
+    container_name: antifraud-svc
+    build:
+      context: .
+      args:
+        - REPOSITORY_NAME=./monorepo/antifraud
+    networks:
+      - concurrency-simulator-network
+    ports:
+      - "8081:8081"
+
+  core:
+    container_name: core-svc
+    build:
+      context: .
+      args:
+        - REPOSITORY_NAME=./monorepo/core
+    networks:
+      - concurrency-simulator-network
+    ports:
+      - "8082:8082"
+
+  customer:
+    container_name: customer-svc
+    build:
+      context: .
+      args:
+        - REPOSITORY_NAME=./monorepo/customer
+    networks:
+      - concurrency-simulator-network
+    ports:
+      - "8083:8083"
+
+  notification:
+    container_name: notification-svc
+    build:
+      context: .
+      args:
+        - REPOSITORY_NAME=./monorepo/notification
+    networks:
+      - concurrency-simulator-network
+    ports:
+      - "8084:8084"
+
+  transaction:
+    container_name: transaction-svc
+    build:
+      context: .
+      args:
+        - REPOSITORY_NAME=./monorepo/transaction
+    networks:
+      - concurrency-simulator-network
+    ports:
+      - "8085:8085"
+
+networks:
+  concurrency-simulator-network:
+    driver: bridge

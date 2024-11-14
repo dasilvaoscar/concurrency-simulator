@@ -24,8 +24,9 @@ Api com algum recurso simulado para simular um cenário de concorrência.
 | RNF-005  | usar kafka como sistema de filas                                          |
 | RNF-006  | ter um sistema de tracking e observabilidade                              |
 | RNF-007  | utilizar event sourcing                                                   |
+| RNF-008  | implementar setup docker para iniciar os serviços                         |
 
-## ADR
+## ADR (Architectural Decision Record)
 - [1 - Project Start](./docs/ADRs/1%20-%20Project%20Start.md)
 - [2 - Monolith Start](./docs/ADRs/2%20-%20Monolith%20Start.md)
 
