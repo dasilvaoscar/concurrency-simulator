@@ -36,3 +36,20 @@ Api com algum recurso simulado para simular um cenário de concorrência.
 
 ![Captura de tela de 2024-11-10 22-11-03](https://github.com/user-attachments/assets/2dbdcb09-bdf2-4fbc-9947-41a259d432d1)
 ![Captura de tela de 2024-11-10 22-12-16](https://github.com/user-attachments/assets/c9b959c5-e8ba-4f42-a86f-1a942a10b476)
+
+
+## Ambientes Docker
+
+
+- Inicia todos os serviços  `docker compose up`
+- Inicia um serviço especifico  `docker compose up [nome do serviço] `
+
+| Service name      | Port |
+|-------------------|------|
+| antifraud-svc     | 8081 |
+| core-svc          | 8082 |
+| customer-svc      | 8083 |
+| notification-svc  | 8084 |
+| transaction-svc   | 8085 |
+
+
