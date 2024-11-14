@@ -1,0 +1,85 @@
+version: '3'
+services:
+  antifraud:
+    container_name: antifraud-svc
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        - REPOSITORY_NAME=./monorepo/antifraud
+    volumes:
+        - ./monorepo/antifraud/:/usr/src/app
+        - ./go.mod/:/usr/src/app/go.mod
+        - ./go.sum/:/usr/src/app/go.sum
+    networks:
+      - concurrency-simulator-network
+    ports:
+      - "8081:8081"
+
+  core:
+    container_name: core-svc
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        - REPOSITORY_NAME=./monorepo/core
+    volumes:
+        - ./monorepo/core/:/usr/src/app
+        - ./go.mod/:/usr/src/app/go.mod
+        - ./go.sum/:/usr/src/app/go.sum
+    networks:
+      - concurrency-simulator-network
+    ports:
+      - "8082:8082"
+
+  customer:
+    container_name: customer-svc
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        - REPOSITORY_NAME=./monorepo/customer
+    volumes:
+        - ./monorepo/customer/:/usr/src/app
+        - ./go.mod/:/usr/src/app/go.mod
+        - ./go.sum/:/usr/src/app/go.sum    
+    networks:
+      - concurrency-simulator-network
+    ports:
+      - "8083:8083"
+
+  notification:
+    container_name: notification-svc
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        - REPOSITORY_NAME=./monorepo/notification
+    volumes:
+        - ./monorepo/notification/:/usr/src/app
+        - ./go.mod/:/usr/src/app/go.mod
+        - ./go.sum/:/usr/src/app/go.sum       
+    networks:
+      - concurrency-simulator-network
+    ports:
+      - "8084:8084"
+
+  transaction:
+    container_name: transaction-svc
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        - REPOSITORY_NAME=./monorepo/transaction
+    volumes:
+        - ./monorepo/transaction/:/usr/src/app
+        - ./go.mod/:/usr/src/app/go.mod
+        - ./go.sum/:/usr/src/app/go.sum          
+    networks:
+      - concurrency-simulator-network
+    ports:
+      - "8085:8085"
+
+networks:
+  concurrency-simulator-network:
+    driver: bridge
