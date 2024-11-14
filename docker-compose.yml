@@ -7,6 +7,9 @@ services:
       dockerfile: Dockerfile.dev
       args:
         - REPOSITORY_NAME=./monorepo/antifraud
+    environment:
+      - PORT=8081
+      - SERVICE_NAME=antifraud-svc
     volumes:
         - ./monorepo/antifraud/:/usr/src/app
         - ./go.mod/:/usr/src/app/go.mod
@@ -23,6 +26,9 @@ services:
       dockerfile: Dockerfile.dev
       args:
         - REPOSITORY_NAME=./monorepo/core
+    environment:
+      - PORT=8082
+      - SERVICE_NAME=core-svc        
     volumes:
         - ./monorepo/core/:/usr/src/app
         - ./go.mod/:/usr/src/app/go.mod
@@ -39,6 +45,9 @@ services:
       dockerfile: Dockerfile.dev
       args:
         - REPOSITORY_NAME=./monorepo/customer
+    environment:
+      - PORT=8083
+      - SERVICE_NAME=customer-svc           
     volumes:
         - ./monorepo/customer/:/usr/src/app
         - ./go.mod/:/usr/src/app/go.mod
@@ -55,6 +64,9 @@ services:
       dockerfile: Dockerfile.dev
       args:
         - REPOSITORY_NAME=./monorepo/notification
+    environment:
+      - PORT=8084
+      - SERVICE_NAME=notification-svc          
     volumes:
         - ./monorepo/notification/:/usr/src/app
         - ./go.mod/:/usr/src/app/go.mod
@@ -71,6 +83,9 @@ services:
       dockerfile: Dockerfile.dev
       args:
         - REPOSITORY_NAME=./monorepo/transaction
+    environment:
+      - PORT=8085
+      - SERVICE_NAME=transaction-sv        
     volumes:
         - ./monorepo/transaction/:/usr/src/app
         - ./go.mod/:/usr/src/app/go.mod
