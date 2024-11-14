@@ -9,6 +9,8 @@ services:
         - REPOSITORY_NAME=./monorepo/antifraud
     volumes:
         - ./monorepo/antifraud/:/usr/src/app
+        - ./go.mod/:/usr/src/app/go.mod
+        - ./go.sum/:/usr/src/app/go.sum
     networks:
       - concurrency-simulator-network
     ports:
@@ -22,7 +24,9 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/core
     volumes:
-        - ./monorepo/core/:/usr/src/app        
+        - ./monorepo/antifraud/:/usr/src/app
+        - ./go.mod/:/usr/src/app/go.mod
+        - ./go.sum/:/usr/src/app/go.sum
     networks:
       - concurrency-simulator-network
     ports:
@@ -36,7 +40,9 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/customer
     volumes:
-        - ./monorepo/customer/:/usr/src/app        
+        - ./monorepo/antifraud/:/usr/src/app
+        - ./go.mod/:/usr/src/app/go.mod
+        - ./go.sum/:/usr/src/app/go.sum    
     networks:
       - concurrency-simulator-network
     ports:
@@ -50,7 +56,9 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/notification
     volumes:
-        - ./monorepo/notification/:/usr/src/app          
+        - ./monorepo/antifraud/:/usr/src/app
+        - ./go.mod/:/usr/src/app/go.mod
+        - ./go.sum/:/usr/src/app/go.sum       
     networks:
       - concurrency-simulator-network
     ports:
@@ -64,7 +72,9 @@ services:
       args:
         - REPOSITORY_NAME=./monorepo/transaction
     volumes:
-        - ./monorepo/transaction/:/usr/src/app            
+        - ./monorepo/antifraud/:/usr/src/app
+        - ./go.mod/:/usr/src/app/go.mod
+        - ./go.sum/:/usr/src/app/go.sum          
     networks:
       - concurrency-simulator-network
     ports:
