@@ -26,6 +26,7 @@ go.work.sum
 
 monorepo/*/tmp/
 /tmp
+/data
 
 monorepo/*/go.mod
 monorepo/*/go.sum
