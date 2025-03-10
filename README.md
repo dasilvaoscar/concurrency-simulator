@@ -29,6 +29,7 @@ Api com algum recurso simulado para simular um cenário de concorrência.
 ## ADR (Architectural Decision Record)
 - [1 - Project Start](./docs/ADRs/1%20-%20Project%20Start.md)
 - [2 - Monolith Start](./docs/ADRs/2%20-%20Monolith%20Start.md)
+- [3 - Load Test](./docs/ADRs/3%20-%20Load%20Test.md)
 
 ## High Level Architecture
 
