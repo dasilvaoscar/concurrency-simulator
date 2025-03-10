@@ -3,6 +3,7 @@ services:
   # Applications
   core:
     container_name: core-svc
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,11 +13,28 @@ services:
       HTTP_SERVER_PORT: "8082"
       SERVICE_NAME: "core-svc"    
       KAFKA_BROKER: "kafka1:19092"
-      # KAFKA_BROKERS: "kafka1:19092,kafka2:19093"
     networks:
       - concurrency-simulator-network
     ports:
       - "8082:8082"
+    depends_on:
+      - kafka1
+      - kafka2
+
+  customer:
+    container_name: customer-svc
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - REPOSITORY_NAME=./monorepo/customer
+    environment:
+      SERVICE_NAME: "customer-svc"    
+      KAFKA_BROKER: "kafka1:19092"
+      KAFKA_GROUP_ID: "customer-svc-group-1"
+    networks:
+      - concurrency-simulator-network
     depends_on:
       - kafka1
       - kafka2
@@ -92,5 +110,16 @@ services:
       - kafka1
       - kafka2
 
+  k6:
+    image: grafana/k6
+    container_name: k6-load-test
+    volumes:
+      - ./scripts:/scripts
+    command: ["run", "/scripts/test.js"]
+    networks:
+      - loadtest-network
+
 networks:
   concurrency-simulator-network:
+  loadtest-network:
+    driver: bridge

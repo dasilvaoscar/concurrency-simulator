@@ -1,25 +1,41 @@
 package main
 
 import (
-    "fmt"
-    "net/http"
-    "os"
-    "strings"
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 func main() {
-    serverPort := os.Getenv("HTTP_SERVER_PORT");
-    serviceName := os.Getenv("SERVICE_NAME");
+	server := os.Getenv("KAFKA_BROKER")
+	groupId := os.Getenv("KAFKA_GROUP_ID")
 
-    fmt.Printf("[%s]: is running on port %s\n", strings.ToUpper(serviceName), serverPort)
+	log.Printf("Trying to connect on broker %s with group id %s", server, groupId)
 
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        w.Write([]byte("This is the "+ serviceName +" service"));
-    });
+	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
+		"bootstrap.servers": server,
+		"group.id": groupId,
+		"auto.offset.reset": "earliest",
+	})
 
-    err := http.ListenAndServe(":"+serverPort, nil);
+	if err != nil {
+		log.Fatalf("Consumer creation error: %s", err)
+		panic(err)
+	}
 
-    if err != nil {
-        fmt.Printf("Error starting server: %v\n", err);
-    }
+	defer consumer.Close()
+
+	topic := "payment_topic"
+	consumer.SubscribeTopics([]string{topic}, nil)
+
+	for {
+		msg, err := consumer.ReadMessage(-1)
+		if err == nil {
+			fmt.Printf("Message received: %+v\n", msg.Value)
+		} else {
+			fmt.Printf("Error: %v\n", err)
+		}
+	}
 }
