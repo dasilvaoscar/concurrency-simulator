@@ -4,6 +4,7 @@ services:
   core:
     container_name: core-svc
     restart: always
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
@@ -19,30 +20,30 @@ services:
       - "8082:8082"
     depends_on:
       - kafka1
-      - kafka2
 
-  customer:
-    container_name: customer-svc
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - REPOSITORY_NAME=./monorepo/customer
-    environment:
-      SERVICE_NAME: "customer-svc"    
-      KAFKA_BROKER: "kafka1:19092"
-      KAFKA_GROUP_ID: "customer-svc-group-1"
-    networks:
-      - concurrency-simulator-network
-    depends_on:
-      - kafka1
-      - kafka2
+  # customer:
+  #   container_name: customer-svc
+  #   restart: always
+  #   platform: linux/amd64
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - REPOSITORY_NAME=./monorepo/customer
+  #   environment:
+  #     SERVICE_NAME: "customer-svc"    
+  #     KAFKA_BROKER: "kafka1:19092"
+  #     KAFKA_GROUP_ID: "customer-svc-group-1"
+  #   networks:
+  #     - concurrency-simulator-network
+  #   depends_on:
+  #     - kafka1
 
   # Infra
   zookeeper:
     image: zookeeper:3.4.9
     hostname: zookeeper
+    platform: linux/amd64
     ports:
       - "2181:2181"
     environment:
@@ -58,6 +59,8 @@ services:
   kafka1:
     image: confluentinc/cp-kafka:5.3.0
     hostname: kafka1
+    platform: linux/amd64
+    restart: always
     ports:
       - "9092:9092"
     environment:
@@ -67,6 +70,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     volumes:
       - ./data/kafka1/data:/var/lib/kafka/data
     depends_on:
@@ -74,50 +78,22 @@ services:
     networks:
       - concurrency-simulator-network
   
-  kafka2:
-    image: confluentinc/cp-kafka:5.3.0
-    hostname: kafka2
-    ports:
-      - "9093:9093"
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka2:19093,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_BROKER_ID: 2
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    volumes:
-      - ./data/kafka2/data:/var/lib/kafka/data
-    depends_on:
-      - zookeeper
-    networks:
-      - concurrency-simulator-network
-
   akhq:
     image: tchiotludo/akhq:latest
+    platform: linux/amd64
     environment:
       AKHQ_CONFIGURATION: |
         akhq:
           connections:
             docker-kafka:
               properties:
-                bootstrap.servers: "kafka1:19092,kafka2:19093"
+                bootstrap.servers: "kafka1:19092"
     ports:
       - "8080:8080"
     networks:
       - concurrency-simulator-network
     depends_on:
       - kafka1
-      - kafka2
-
-  k6:
-    image: grafana/k6
-    container_name: k6-load-test
-    volumes:
-      - ./scripts:/scripts
-    command: ["run", "/scripts/test.js"]
-    networks:
-      - loadtest-network
 
 networks:
   concurrency-simulator-network:
