@@ -8,7 +8,6 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
-
 func NewKafkaProducer() (*kafka.Producer, error) {
 	server := os.Getenv("KAFKA_BROKER")
 
