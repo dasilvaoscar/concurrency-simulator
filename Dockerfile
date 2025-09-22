@@ -13,7 +13,7 @@ ARG REPOSITORY_NAME
 
 COPY go.mod go.sum ./
 
-COPY ${REPOSITORY_NAME:-.} ${REPOSITORY_NAME:-.}
+COPY monorepo/ ./monorepo/
 
 RUN go mod download
 
