@@ -1,8 +1,8 @@
 package kafka_producer
 
 import (
+	"concurrency-simulator/monorepo/core/utils"
 	"errors"
-	"log"
 	"os"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
@@ -11,14 +11,18 @@ import (
 func NewKafkaProducer() (*kafka.Producer, error) {
 	server := os.Getenv("KAFKA_BROKER")
 
-	log.Printf("Trying to connect on broker %s", server)
+	logger := utils.NewLogger()
 
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": server,
+		"bootstrap.servers":  server,
+		"enable.idempotence": "true",
+		"acks":               "all",
+		"linger.ms":          0,
+		"batch.size":         1,
 	})
 
 	if err != nil {
-		log.Fatalf("Producer creation error: %s", err)
+		logger.Fatalf("Producer creation error: %s", err)
 		return nil, errors.New("Producer creation error")
 	}
 
