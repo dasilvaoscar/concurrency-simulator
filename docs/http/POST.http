@@ -2,7 +2,9 @@ POST http://localhost:8082/payment
 Content-Type: application/json
 
 {
+  "first_name": "Oscar",
+  "last_name": "da Silva",
   "email": "test@test.com",
   "installments": 10,
-  "amount": 1000
+  "amount": 1000000
 }

@@ -1,25 +1,32 @@
 package main
 
 import (
-    "fmt"
-    "net/http"
-    "os"
-    "strings"
+	"concurrency-simulator/monorepo/antifraud/handler"
+	"concurrency-simulator/monorepo/antifraud/utils"
+	"sync"
 )
 
 func main() {
-    serverPort := os.Getenv("HTTP_SERVER_PORT");
-    serviceName := os.Getenv("SERVICE_NAME");
+	logger := utils.NewLogger()
 
-    fmt.Printf("[%s]: is running on port %s\n", strings.ToUpper(serviceName), serverPort)
+	var wg sync.WaitGroup
+	wg.Add(1)
 
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        w.Write([]byte("This is the "+ serviceName +" service"));
-    });
+	go func() {
+		defer wg.Done()
+		consumer, err := handler.NewPaymentConsumer()
 
-    err := http.ListenAndServe(":"+serverPort, nil);
+		if err != nil {
+			logger.Fatalf("Failed to create Kafka consumer: %v", err)
+		}
 
-    if err != nil {
-        fmt.Printf("Error starting server: %v\n", err);
-    }
+		defer consumer.Close()
+
+		logger.Println("Starting Kafka consumer...")
+		if err := consumer.Start(); err != nil {
+			logger.Fatalf("Failed to start Kafka consumer: %v", err)
+		}
+	}()
+
+	wg.Wait()
 }
