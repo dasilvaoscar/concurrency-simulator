@@ -9,17 +9,46 @@ Um monorepo com um sistema de pagamentos simulado, com o objetivo de treinar alg
 - [Funcionais](./docs/requisitos/rf.md)
 - [Não funcionais](./docs/requisitos/rnf.md)
 
-## ADR (Architectural Decision Record)
-- [1 - Project Start](./docs/ADRs/1%20-%20Project%20Start.md)
-- [2 - Monolith Start](./docs/ADRs/2%20-%20Monolith%20Start.md)
-- [3 - Load Test](./docs/ADRs/3%20-%20Load%20Test.md)
+### System Flow Diagram
 
-## High Level Architecture
-
-- [High Level Architecture Link](https://miro.com/welcomeonboard/Ymx1M214YVEyTHpNU3BFYmVHSXV0bEVNeDhvWU10allDUjJ1Smc4eGlOcjljbEZBRldETFJrbFd1WGRZUUtVMlhRTW54Ujd5UEtEQ3BsbVFxcGo4R1lmd0xrMTVwc0ljUkQ2OU9lU2x6T2Y3RUtZczJpZGQzTStuY0l2TGZ6L0chZQ==?share_link_id=599870259324)
-
-![Captura de tela de 2025-03-09 22-33-51](https://github.com/user-attachments/assets/7de10d44-f03c-4f0a-93dd-3ebeb0c9d2ec)
-![Captura de tela de 2024-11-10 22-12-16](https://github.com/user-attachments/assets/c9b959c5-e8ba-4f42-a86f-1a942a10b476)
+```mermaid
+architecture-beta
+    group api(cloud)[API Layer]
+    group messaging(server)[Messaging Layer]
+    group services(database)[Services Layer]
+    group databases(disk)[Database Layer]
+    
+    service client(internet)[Cliente] in api
+    service core_api(server)[Core API] in api
+    
+    service payment_topic(disk)[payment_topic] in messaging
+    service push_notification_queue(disk)[push_notification_queue] in messaging
+    service transaction_queue(disk)[transaction_queue] in messaging
+    
+    service customer_svc(database)[customer-svc] in services
+    service antifraud_svc(database)[antifraud-svc] in services
+    service transaction_svc(database)[transaction-svc] in services
+    service notification_svc(database)[push-notification-svc] in services
+    
+    service dynamodb(database)[DynamoDB] in databases
+    service postgres(database)[PostgreSQL] in databases
+    
+    client:R --> L:core_api
+    core_api:R --> L:payment_topic
+    payment_topic:R --> L:customer_svc
+    payment_topic:R --> L:antifraud_svc
+    customer_svc:R --> L:push_notification_queue
+    antifraud_svc:R --> L:push_notification_queue
+    antifraud_svc:R --> L:transaction_queue
+    transaction_queue:R --> L:transaction_svc
+    transaction_svc:R --> L:push_notification_queue
+    push_notification_queue:R --> L:notification_svc
+    
+    customer_svc:B --> T:dynamodb
+    notification_svc:B --> T:dynamodb
+    antifraud_svc:B --> T:postgres
+    transaction_svc:B --> T:postgres
+```
 
 ## Ambientes Docker
 
