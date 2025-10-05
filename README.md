@@ -28,3 +28,8 @@ Um monorepo com um sistema de pagamentos simulado, com o objetivo de treinar alg
 ```zsh
 docker compose up
 ```
+
+## Utils
+
+- [Reset de tópico no Kafka](./docs/kafka/como_deletar_topico.md)
+- [Teste de envio de pagamento](./docs/http/POST.http)
