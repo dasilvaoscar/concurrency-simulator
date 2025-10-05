@@ -1,7 +1,6 @@
 package kafka_producer
 
 import (
-	"concurrency-simulator/monorepo/core/utils"
 	"errors"
 	"os"
 
@@ -10,8 +9,6 @@ import (
 
 func NewKafkaProducer() (*kafka.Producer, error) {
 	server := os.Getenv("KAFKA_BROKER")
-
-	logger := utils.NewLogger()
 
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers":  server,
@@ -22,7 +19,6 @@ func NewKafkaProducer() (*kafka.Producer, error) {
 	})
 
 	if err != nil {
-		logger.Fatalf("Producer creation error: %s", err)
 		return nil, errors.New("Producer creation error")
 	}
 

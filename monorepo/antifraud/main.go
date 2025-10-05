@@ -4,14 +4,14 @@ import (
 	"concurrency-simulator/monorepo/antifraud/controllers"
 	"concurrency-simulator/monorepo/antifraud/utils"
 	"concurrency-simulator/monorepo/shared"
-	"log"
 	"sync"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"go.uber.org/zap"
 )
 
 func main() {
-	logger := utils.NewLogger()
+	logger := utils.NewRequestLogger()
 
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -21,7 +21,7 @@ func main() {
 	wg.Wait()
 }
 
-func execution(wg *sync.WaitGroup, logger *log.Logger) {
+func execution(wg *sync.WaitGroup, logger *zap.Logger) {
 	defer wg.Done()
 
 	consumer, err := kafka.NewConsumer(utils.GetKafkaConfig())
@@ -29,18 +29,18 @@ func execution(wg *sync.WaitGroup, logger *log.Logger) {
 	controller := controllers.NewAntifraudController()
 
 	if err != nil {
-		logger.Fatalf("Consumer creation error: %s", err)
+		logger.Error("Consumer creation error", zap.Error(err))
 		panic(err)
 	}
 
 	err = consumer.SubscribeTopics([]string{shared.PaymentTopic}, nil)
 
 	if err != nil {
-		log.Fatalf("Failed to subscribe to topics: %s", err)
+		logger.Error("Failed to subscribe to topics", zap.Error(err))
 		panic(err)
 	}
 
-	log.Printf("Consumer started, listening to topic: %s", shared.PaymentTopic)
+	logger.Error("Consumer started, listening to topic", zap.String("topic", shared.PaymentTopic))
 
 	defer consumer.Close()
 
@@ -48,10 +48,10 @@ func execution(wg *sync.WaitGroup, logger *log.Logger) {
 		msg, err := consumer.ReadMessage(-1)
 
 		if err != nil {
-			log.Printf("Consumer error: %v", err)
+			logger.Error("Consumer error", zap.Error(err))
 			continue
 		}
 
-		controller.Execute(msg)
+		controller.ProcessMessage(msg)
 	}
 }

@@ -9,24 +9,30 @@ import (
 	"net/http"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"go.uber.org/zap"
 )
 
-var logger = utils.NewLogger()
-
 func PaymentHandler(w http.ResponseWriter, r *http.Request, kafkaProducer *kafka.Producer) {
+	logger := utils.NewRequestLogger(r)
 
 	topic := shared.PaymentTopic
 
 	bodyMap, err := parseBody(r)
 
 	if err != nil {
-		logger.Printf("Error parsing body: %v\n", err)
+		logger.Error("Failed to parse request body",
+			zap.Error(err),
+			zap.String("content_type", r.Header.Get("Content-Type")),
+		)
+
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	if err := validateBody(bodyMap); err != nil {
-		logger.Printf("Error: amount, installments and email are required")
+		logger.Warn("Invalid request body",
+			zap.Error(err),
+		)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -34,13 +40,12 @@ func PaymentHandler(w http.ResponseWriter, r *http.Request, kafkaProducer *kafka
 	amount := bodyMap["amount"]
 	installments := bodyMap["installments"]
 	email := bodyMap["email"]
-
 	firstName := bodyMap["first_name"]
 	lastName := bodyMap["last_name"]
 
 	amountFloat, ok := amount.(float64)
 	if !ok {
-		logger.Printf("Error: amount is not a float64")
+		logger.Error("Error: amount is not a float64")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -55,7 +60,10 @@ func PaymentHandler(w http.ResponseWriter, r *http.Request, kafkaProducer *kafka
 
 	jsonMessage, err := json.Marshal(originalMessage)
 	if err != nil {
-		logger.Printf("Error marshalling message: %v\n", err)
+		logger.Error("Failed to marshal payment message",
+			zap.Error(err),
+			zap.Int("message_size", len(jsonMessage)),
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -75,18 +83,32 @@ func PaymentHandler(w http.ResponseWriter, r *http.Request, kafkaProducer *kafka
 		for e := range deliveryChan {
 			msg := e.(*kafka.Message)
 			if msg.TopicPartition.Error != nil {
-				logger.Printf("Erro na entrega da mensagem: %v\n", msg.TopicPartition.Error)
+				logger.Error("Kafka delivery failed",
+					zap.Error(msg.TopicPartition.Error),
+					zap.String("topic", topic),
+					zap.Int32("partition", msg.TopicPartition.Partition),
+				)
+			} else {
+				logger.Info("Kafka delivery confirmed",
+					zap.String("topic", topic),
+					zap.Int32("partition", msg.TopicPartition.Partition),
+					zap.Int64("offset", int64(msg.TopicPartition.Offset)),
+				)
 			}
 		}
 	}()
 
 	pendingMessages := kafkaProducer.Flush(1000)
 	if pendingMessages > 0 {
-		logger.Printf("AVISO: %d mensagens ainda pendentes após flush\n", pendingMessages)
+		logger.Warn("Messages still pending after flush",
+			zap.Int("pending_count", pendingMessages),
+		)
 	}
 
 	close(deliveryChan)
-	logger.Println("Produtor encerrado.")
+	logger.Info("Payment processing completed",
+		zap.String("status", "success"),
+	)
 
 	w.Write([]byte("sent to kafka"))
 }
@@ -94,7 +116,6 @@ func PaymentHandler(w http.ResponseWriter, r *http.Request, kafkaProducer *kafka
 func parseBody(r *http.Request) (map[string]interface{}, error) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		logger.Printf("Error reading body: %v\n", err)
 		return nil, err
 	}
 
@@ -104,7 +125,6 @@ func parseBody(r *http.Request) (map[string]interface{}, error) {
 
 	err = json.Unmarshal(body, &bodyMap)
 	if err != nil {
-		logger.Printf("Error unmarshalling body: %v\n", err)
 		return nil, err
 	}
 

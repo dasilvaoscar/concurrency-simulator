@@ -1,20 +1,17 @@
 package utils
 
 import (
-	"log"
-	"os"
-	"sync"
+	"concurrency-simulator/monorepo/shared"
+
+	"go.uber.org/zap"
 )
 
-var (
-	logger *log.Logger
-	once   sync.Once
-)
+func NewRequestLogger() *zap.Logger {
+	var loggerInstance = shared.NewLogger("core-svc")
 
-// NewLogger returns a singleton logger instance
-func NewLogger() *log.Logger {
-	once.Do(func() {
-		logger = log.New(os.Stdout, "antifraud-svc: ", log.LstdFlags)
-	})
+	logger := loggerInstance.With(
+		zap.String("topic", shared.PaymentTopic),
+	)
+
 	return logger
 }
