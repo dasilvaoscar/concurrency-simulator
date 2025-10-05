@@ -2,7 +2,7 @@
 
 ## Descrição 
 
-Api com algum recurso simulado para simular um cenário de concorrência.
+Um monorepo com um sistema de pagamentos simulado, com o objetivo de treinar alguns conceitos importantes e ferramentas que eu acho interessantes de se testar
 
 ## Requisitos
 
