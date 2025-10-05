@@ -47,6 +47,10 @@ flowchart LR
 
 ## Ambientes Docker
 
+### Ver mensagens no tópico
+
+> http://localhost:8080
+
 ### Iniciar containers
 
 ```zsh
