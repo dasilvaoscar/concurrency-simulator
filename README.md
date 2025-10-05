@@ -6,52 +6,54 @@ Um monorepo com um sistema de pagamentos simulado, com o objetivo de treinar alg
 
 ## Requisitos
 
-### Funcionais
+- [Funcionais](./docs/requisitos/rf.md)
+- [Não funcionais](./docs/requisitos/rnf.md)
 
-| ID       | Descrição                                                                 |
-|----------|---------------------------------------------------------------------------|
-| RF-001   | deve receber um post e criar um regístro de pagamento                     |
-| RF-002   | enviar push notifications com o status do pagamento                        |
+### System Flow Diagram
 
-### Não funcionais
-
-| ID       | Descrição                                                                 |
-|----------|---------------------------------------------------------------------------|
-| RNF-001  | processar em menos de 100 ms                                              |
-| RNF-002  | precisa ser feito em Golang                                               |
-| RNF-003  | simular um ambiente de microsserviços                                     |
-| RNF-004  | usar postgres como banco de dados SQL, e dynamo NoSQL                     |
-| RNF-005  | usar kafka como sistema de filas                                          |
-| RNF-006  | ter um sistema de tracking e observabilidade                              |
-| RNF-007  | utilizar event sourcing                                                   |
-| RNF-008  | implementar setup docker para iniciar os serviços                         |
-
-## ADR (Architectural Decision Record)
-- [1 - Project Start](./docs/ADRs/1%20-%20Project%20Start.md)
-- [2 - Monolith Start](./docs/ADRs/2%20-%20Monolith%20Start.md)
-- [3 - Load Test](./docs/ADRs/3%20-%20Load%20Test.md)
-
-## High Level Architecture
-
-- [High Level Architecture Link](https://miro.com/welcomeonboard/Ymx1M214YVEyTHpNU3BFYmVHSXV0bEVNeDhvWU10allDUjJ1Smc4eGlOcjljbEZBRldETFJrbFd1WGRZUUtVMlhRTW54Ujd5UEtEQ3BsbVFxcGo4R1lmd0xrMTVwc0ljUkQ2OU9lU2x6T2Y3RUtZczJpZGQzTStuY0l2TGZ6L0chZQ==?share_link_id=599870259324)
-
-![Captura de tela de 2025-03-09 22-33-51](https://github.com/user-attachments/assets/7de10d44-f03c-4f0a-93dd-3ebeb0c9d2ec)
-![Captura de tela de 2024-11-10 22-12-16](https://github.com/user-attachments/assets/c9b959c5-e8ba-4f42-a86f-1a942a10b476)
-
+```mermaid
+flowchart LR
+    Client[Cliente] --> CoreAPI[Core API]
+    CoreAPI --> PaymentTopic[payment_topic]
+    
+    PaymentTopic --> CustomerSvc[customer-svc]
+    PaymentTopic --> AntifraudSvc[antifraud-svc]
+    
+    CustomerSvc --> PushNotificationQueue[push_notification_queue]
+    AntifraudSvc --> PushNotificationQueue
+    AntifraudSvc --> TransactionQueue[transaction_queue]
+    
+    TransactionQueue --> TransactionSvc[transaction-svc]
+    TransactionSvc --> PushNotificationQueue
+    PushNotificationQueue --> NotificationSvc[push-notification-svc]
+    
+    CustomerSvc --> DynamoDB[(DynamoDB)]
+    NotificationSvc --> DynamoDB
+    AntifraudSvc --> Postgres[(PostgreSQL)]
+    TransactionSvc --> Postgres
+    
+    style Client fill:#e1f5fe,color:#000000
+    style CoreAPI fill:#f3e5f5,color:#000000
+    style PaymentTopic fill:#fff3e0,color:#000000
+    style CustomerSvc fill:#e8f5e8,color:#000000
+    style AntifraudSvc fill:#e8f5e8,color:#000000
+    style TransactionSvc fill:#e8f5e8,color:#000000
+    style NotificationSvc fill:#e8f5e8,color:#000000
+    style PushNotificationQueue fill:#fff3e0,color:#000000
+    style TransactionQueue fill:#fff3e0,color:#000000
+    style DynamoDB fill:#ffebee,color:#000000
+    style Postgres fill:#ffebee,color:#000000
+```
 
 ## Ambientes Docker
 
+### Iniciar containers
 
-- Para iniciar e criar as imagens, use o comando `docker compose up --build`
-- Para iniciar todos os serviços, use o comando  `docker compose up`
-- Para iniciar um serviço especifico, use o comando  `docker compose up [nome do serviço] `
+```zsh
+docker compose up
+```
 
-| Service name      | Port |
-|-------------------|------|
-| antifraud-svc     | 8081 |
-| core-svc          | 8082 |
-| customer-svc      | 8083 |
-| notification-svc  | 8084 |
-| transaction-svc   | 8085 |
+## Utils
 
-
+- [Reset de tópico no Kafka](./docs/kafka/como_deletar_topico.md)
+- [Teste de envio de pagamento](./docs/http/POST.http)
