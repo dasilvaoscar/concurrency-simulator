@@ -1,27 +1,14 @@
 package main
 
 import (
-	"concurrency-simulator/monorepo/antifraud/handler"
+	"concurrency-simulator/monorepo/antifraud/controllers"
 	"concurrency-simulator/monorepo/antifraud/utils"
+	"concurrency-simulator/monorepo/shared"
 	"log"
 	"sync"
+
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
-
-func execution(wg *sync.WaitGroup, logger *log.Logger) {
-	defer wg.Done()
-	consumer, err := handler.NewPaymentConsumer()
-
-	if err != nil {
-		logger.Fatalf("Failed to create Kafka consumer: %v", err)
-	}
-
-	defer consumer.Close()
-
-	logger.Println("Starting Kafka consumer...")
-	if err := consumer.Start(); err != nil {
-		logger.Fatalf("Failed to start Kafka consumer: %v", err)
-	}
-}
 
 func main() {
 	logger := utils.NewLogger()
@@ -32,4 +19,39 @@ func main() {
 	go execution(&wg, logger)
 
 	wg.Wait()
+}
+
+func execution(wg *sync.WaitGroup, logger *log.Logger) {
+	defer wg.Done()
+
+	consumer, err := kafka.NewConsumer(utils.GetKafkaConfig())
+
+	controller := controllers.NewAntifraudController()
+
+	if err != nil {
+		logger.Fatalf("Consumer creation error: %s", err)
+		panic(err)
+	}
+
+	err = consumer.SubscribeTopics([]string{shared.PaymentTopic}, nil)
+
+	if err != nil {
+		log.Fatalf("Failed to subscribe to topics: %s", err)
+		panic(err)
+	}
+
+	log.Printf("Consumer started, listening to topic: %s", shared.PaymentTopic)
+
+	defer consumer.Close()
+
+	for {
+		msg, err := consumer.ReadMessage(-1)
+
+		if err != nil {
+			log.Printf("Consumer error: %v", err)
+			continue
+		}
+
+		controller.Execute(msg)
+	}
 }
