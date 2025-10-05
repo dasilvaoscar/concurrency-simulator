@@ -3,21 +3,23 @@ package main
 import (
 	"concurrency-simulator/monorepo/core/handlers"
 	"concurrency-simulator/monorepo/core/kafka_producer"
-	"concurrency-simulator/monorepo/core/utils"
+	"concurrency-simulator/monorepo/shared"
 	"net/http"
 	"os"
 	"strings"
+
+	"go.uber.org/zap"
 )
 
 func main() {
-	logger := utils.NewLogger()
+	logger := shared.NewLogger("core-svc")
 
-	logger.Printf("[%s]: is running on port %s\n", strings.ToUpper(os.Getenv("SERVICE_NAME")), os.Getenv("HTTP_SERVER_PORT"))
+	logger.Info("Service is running on port", zap.String("service", strings.ToUpper(os.Getenv("SERVICE_NAME"))), zap.String("port", os.Getenv("HTTP_SERVER_PORT")))
 
 	kafkaProducer, err := kafka_producer.NewKafkaProducer()
 
 	if err != nil {
-		logger.Printf("Error creating producer: %v\n", err)
+		logger.Error("Error creating producer", zap.Error(err))
 		os.Exit(1)
 	}
 
@@ -30,6 +32,6 @@ func main() {
 	err = http.ListenAndServe(":"+os.Getenv("HTTP_SERVER_PORT"), nil)
 
 	if err != nil {
-		logger.Printf("Error starting server: %v\n", err)
+		logger.Error("Error starting server", zap.Error(err))
 	}
 }

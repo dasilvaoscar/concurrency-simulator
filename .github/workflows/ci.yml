@@ -1,0 +1,159 @@
+name: Simple PR Summary
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  generate-simple-summary:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate Simple PR Summary
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: pullRequest } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+
+            // Análise dos arquivos modificados
+            const goFiles = files.filter(f => f.filename.endsWith('.go'));
+            const dockerFiles = files.filter(f => f.filename.includes('docker') || f.filename.includes('Dockerfile'));
+            const configFiles = files.filter(f => f.filename.endsWith('.yml') || f.filename.endsWith('.yaml'));
+            const docsFiles = files.filter(f => f.filename.endsWith('.md'));
+            const testFiles = files.filter(f => f.filename.includes('test') || f.filename.includes('_test.go'));
+
+            // Categorização das mudanças por serviço
+            const services = {
+              core: files.filter(f => f.filename.includes('monorepo/core')),
+              antifraud: files.filter(f => f.filename.includes('monorepo/antifraud')),
+              customer: files.filter(f => f.filename.includes('monorepo/customer')),
+              notification: files.filter(f => f.filename.includes('monorepo/notification')),
+              transaction: files.filter(f => f.filename.includes('monorepo/transaction')),
+              shared: files.filter(f => f.filename.includes('monorepo/shared')),
+              observability: files.filter(f => f.filename.includes('observability')),
+              docs: files.filter(f => f.filename.includes('docs'))
+            };
+
+            // Detectar tipo de mudança
+            const changeTypes = [];
+            if (goFiles.length > 0) changeTypes.push('🔧 Código');
+            if (testFiles.length > 0) changeTypes.push('🧪 Testes');
+            if (dockerFiles.length > 0) changeTypes.push('🐳 Docker');
+            if (configFiles.length > 0) changeTypes.push('⚙️ Configuração');
+            if (docsFiles.length > 0) changeTypes.push('📚 Documentação');
+
+            // Estatísticas
+            const stats = {
+              totalFiles: files.length,
+              additions: files.reduce((sum, f) => sum + f.additions, 0),
+              deletions: files.reduce((sum, f) => sum + f.deletions, 0),
+              goFiles: goFiles.length,
+              testFiles: testFiles.length,
+              services: Object.keys(services).filter(key => services[key].length > 0)
+            };
+
+            // Determinar complexidade
+            const complexity = stats.totalFiles > 20 ? '🔴 Alta' : 
+                             stats.totalFiles > 10 ? '🟡 Média' : '🟢 Baixa';
+
+            // Gerar resumo
+            let summary = `## 🤖 Resumo Automático da PR\n\n`;
+            
+            // Informações básicas
+            summary += `### ℹ️ Informações Gerais\n`;
+            summary += `- **Título:** ${pullRequest.title}\n`;
+            summary += `- **Autor:** @${pullRequest.user.login}\n`;
+            summary += `- **Branch:** \`${pullRequest.head.ref}\` → \`${pullRequest.base.ref}\`\n`;
+            summary += `- **Complexidade:** ${complexity}\n`;
+            summary += `- **Tipos de mudança:** ${changeTypes.join(', ')}\n\n`;
+
+            // Estatísticas
+            summary += `### 📊 Estatísticas\n`;
+            summary += `| Métrica | Valor |\n`;
+            summary += `|---------|-------|\n`;
+            summary += `| Arquivos modificados | ${stats.totalFiles} |\n`;
+            summary += `| Linhas adicionadas | +${stats.additions} |\n`;
+            summary += `| Linhas removidas | -${stats.deletions} |\n`;
+            summary += `| Arquivos Go | ${stats.goFiles} |\n`;
+            summary += `| Arquivos de teste | ${stats.testFiles} |\n\n`;
+
+            // Serviços afetados
+            if (stats.services.length > 0) {
+              summary += `### 🏗️ Componentes Afetados\n`;
+              stats.services.forEach(service => {
+                const count = services[service].length;
+                const emoji = service === 'core' ? '🎯' :
+                             service === 'antifraud' ? '🛡️' :
+                             service === 'customer' ? '👤' :
+                             service === 'notification' ? '📱' :
+                             service === 'transaction' ? '💳' :
+                             service === 'shared' ? '🔗' :
+                             service === 'observability' ? '📊' :
+                             service === 'docs' ? '📚' : '📁';
+                summary += `- ${emoji} **${service}:** ${count} arquivo(s)\n`;
+              });
+              summary += `\n`;
+            }
+
+            // Arquivos principais
+            summary += `### 📁 Principais Arquivos Modificados\n`;
+            const mainFiles = files.slice(0, 15);
+            mainFiles.forEach(file => {
+              const status = file.status === 'added' ? '🆕' : 
+                           file.status === 'removed' ? '🗑️' : 
+                           file.status === 'renamed' ? '📝' : '✏️';
+              const size = file.additions + file.deletions;
+              const sizeIndicator = size > 100 ? '🔴' : size > 50 ? '🟡' : '🟢';
+              summary += `- ${status} ${sizeIndicator} \`${file.filename}\` (+${file.additions}/-${file.deletions})\n`;
+            });
+
+            if (files.length > 15) {
+              summary += `- ... e mais ${files.length - 15} arquivo(s)\n`;
+            }
+
+            // Checklist de revisão
+            summary += `\n### ✅ Checklist de Revisão\n`;
+            summary += `- [ ] Código segue padrões do projeto\n`;
+            summary += `- [ ] Testes foram adicionados/atualizados\n`;
+            summary += `- [ ] Documentação foi atualizada\n`;
+            summary += `- [ ] Não há vazamentos de dados sensíveis\n`;
+            summary += `- [ ] Performance foi considerada\n`;
+            summary += `- [ ] Tratamento de erros adequado\n`;
+
+            // Preservar descrição original se existir
+            let finalDescription = summary;
+            if (pullRequest.body && pullRequest.body.trim()) {
+              finalDescription += `\n### 📝 Descrição Original\n`;
+              finalDescription += pullRequest.body;
+            }
+
+            finalDescription += `\n---\n*📅 Gerado automaticamente em ${new Date().toLocaleString('pt-BR')}*`;
+
+            // Atualizar a descrição da PR
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: finalDescription
+            });
+
+            console.log('✅ Descrição da PR atualizada com sucesso!');

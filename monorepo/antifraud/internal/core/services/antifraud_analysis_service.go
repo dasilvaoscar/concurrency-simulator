@@ -4,9 +4,9 @@ import (
 	"concurrency-simulator/monorepo/antifraud/internal/core/models"
 	"concurrency-simulator/monorepo/antifraud/utils"
 	"database/sql"
-	"errors"
-	"log"
 	"regexp"
+
+	"go.uber.org/zap"
 )
 
 type AntifraudAnalisysServiceData struct {
@@ -19,11 +19,11 @@ type AntifraudAnalisysServiceData struct {
 
 // TODO: refactor dependencies to use interfaces
 type AntifraudAnalisysService struct {
-	log    *log.Logger
+	log    *zap.Logger
 	driver *sql.DB
 }
 
-func (as *AntifraudAnalisysService) Execute(payment models.Payment) (models.Payment, error) {
+func (as *AntifraudAnalisysService) Execute(payment models.Payment) models.Payment {
 	highRiskAmount := 50000.0
 	suspiciousInstallmentAmount := 10000.0
 	suspiciousInstallments := 6
@@ -33,22 +33,22 @@ func (as *AntifraudAnalisysService) Execute(payment models.Payment) (models.Paym
 	if payment.Amount > highRiskAmount {
 		payment.Status = &status
 		as.saveDataToDatabase(payment)
-		as.log.Printf("Transação suspeita: valor muito alto, risco elevado - Email: %s - Amount: %.2f", payment.Email, payment.Amount)
-		return payment, errors.New("transação suspeita: valor muito alto, risco elevado")
+		as.log.Info("Transação suspeita: valor muito alto, risco elevado - Email: %s - Amount: %.2f", zap.String("email", payment.Email), zap.Float64("amount", payment.Amount))
+		return payment
 	}
 
 	if payment.Amount > suspiciousInstallmentAmount && payment.Installments > suspiciousInstallments {
 		payment.Status = &status
 		as.saveDataToDatabase(payment)
-		as.log.Printf("Transação suspeita: valor alto com número de parcelas elevado - Email: %s - Amount: %.2f - Installments: %d", payment.Email, payment.Amount, payment.Installments)
-		return payment, errors.New("transação suspeita: valor alto com número de parcelas elevado")
+		as.log.Info("Transação suspeita: valor alto com número de parcelas elevado - Email: %s - Amount: %.2f - Installments: %d", zap.String("email", payment.Email), zap.Float64("amount", payment.Amount), zap.Int("installments", payment.Installments))
+		return payment
 	}
 
 	if as.isSuspiciousName(payment.FirstName) || as.isSuspiciousName(payment.LastName) {
 		payment.Status = &status
 		as.saveDataToDatabase(payment)
-		as.log.Printf("Transação suspeita: nome ou sobrenome incomum - Email: %s - FirstName: %s - LastName: %s", payment.Email, payment.FirstName, payment.LastName)
-		return payment, errors.New("transação suspeita: nome ou sobrenome incomum")
+		as.log.Info("Transação suspeita: nome ou sobrenome incomum - Email: %s - FirstName: %s - LastName: %s", zap.String("email", payment.Email), zap.String("first_name", payment.FirstName), zap.String("last_name", payment.LastName))
+		return payment
 	}
 
 	status = "APPROVED"
@@ -56,7 +56,7 @@ func (as *AntifraudAnalisysService) Execute(payment models.Payment) (models.Paym
 	payment.Status = &status
 	as.saveDataToDatabase(payment)
 
-	return payment, nil
+	return payment
 }
 
 func (as *AntifraudAnalisysService) isSuspiciousName(name string) bool {
@@ -82,7 +82,7 @@ func (as *AntifraudAnalisysService) saveDataToDatabase(data models.Payment) (boo
 
 func NewAntifraudAnalisysService(driver *sql.DB) *AntifraudAnalisysService {
 	return &AntifraudAnalisysService{
-		log:    utils.NewLogger(),
+		log:    utils.NewRequestLogger(),
 		driver: driver,
 	}
 }
