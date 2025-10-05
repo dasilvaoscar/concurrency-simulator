@@ -9,7 +9,7 @@ Um monorepo com um sistema de pagamentos simulado, com o objetivo de treinar alg
 - [Funcionais](./docs/requisitos/rf.md)
 - [Não funcionais](./docs/requisitos/rnf.md)
 
-### System Flow Diagram
+## System Flow Diagram
 
 ```mermaid
 flowchart LR
