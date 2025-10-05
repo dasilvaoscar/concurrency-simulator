@@ -139,20 +139,21 @@ jobs:
             summary += `- [ ] Performance foi considerada\n`;
             summary += `- [ ] Tratamento de erros adequado\n`;
 
-            // Adicionar descrição original se existir
+            // Preservar descrição original se existir
+            let finalDescription = summary;
             if (pullRequest.body && pullRequest.body.trim()) {
-              summary += `\n### 📝 Descrição Original\n`;
-              summary += pullRequest.body;
+              finalDescription += `\n### 📝 Descrição Original\n`;
+              finalDescription += pullRequest.body;
             }
 
-            summary += `\n---\n*📅 Gerado automaticamente em ${new Date().toLocaleString('pt-BR')}*`;
+            finalDescription += `\n---\n*📅 Gerado automaticamente em ${new Date().toLocaleString('pt-BR')}*`;
 
-            // Comentar na PR em vez de atualizar a descrição
-            await github.rest.issues.createComment({
+            // Atualizar a descrição da PR
+            await github.rest.pulls.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: summary
+              pull_number: context.issue.number,
+              body: finalDescription
             });
 
-            console.log('✅ Resumo da PR gerado e comentado com sucesso!');
+            console.log('✅ Descrição da PR atualizada com sucesso!');
