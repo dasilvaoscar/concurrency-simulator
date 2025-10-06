@@ -17,7 +17,7 @@ type AntifraudAnalisysServiceData struct {
 	Installments int
 }
 
-// TODO: refactor dependencies to use interfaces
+// TODO: do refactor to use interfaces
 type AntifraudAnalisysService struct {
 	log    *zap.Logger
 	driver *sql.DB
@@ -33,21 +33,21 @@ func (as *AntifraudAnalisysService) Execute(payment models.Payment) models.Payme
 	if payment.Amount > highRiskAmount {
 		payment.Status = &status
 		as.saveDataToDatabase(payment)
-		as.log.Info("Transação suspeita: valor muito alto, risco elevado - Email: %s - Amount: %.2f", zap.String("email", payment.Email), zap.Float64("amount", payment.Amount))
+		as.log.Info("Suspicious transaction: high amount, high risk - Email: %s - Amount: %.2f", zap.String("email", payment.Email), zap.Float64("amount", payment.Amount))
 		return payment
 	}
 
 	if payment.Amount > suspiciousInstallmentAmount && payment.Installments > suspiciousInstallments {
 		payment.Status = &status
 		as.saveDataToDatabase(payment)
-		as.log.Info("Transação suspeita: valor alto com número de parcelas elevado - Email: %s - Amount: %.2f - Installments: %d", zap.String("email", payment.Email), zap.Float64("amount", payment.Amount), zap.Int("installments", payment.Installments))
+		as.log.Info("Suspicious transaction: high amount with elevated number of installments - Email: %s - Amount: %.2f - Installments: %d", zap.String("email", payment.Email), zap.Float64("amount", payment.Amount), zap.Int("installments", payment.Installments))
 		return payment
 	}
 
 	if as.isSuspiciousName(payment.FirstName) || as.isSuspiciousName(payment.LastName) {
 		payment.Status = &status
 		as.saveDataToDatabase(payment)
-		as.log.Info("Transação suspeita: nome ou sobrenome incomum - Email: %s - FirstName: %s - LastName: %s", zap.String("email", payment.Email), zap.String("first_name", payment.FirstName), zap.String("last_name", payment.LastName))
+		as.log.Info("Suspicious transaction: unusual name or surname - Email: %s - FirstName: %s - LastName: %s", zap.String("email", payment.Email), zap.String("first_name", payment.FirstName), zap.String("last_name", payment.LastName))
 		return payment
 	}
 
