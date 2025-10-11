@@ -27,22 +27,28 @@ flowchart LR
     TransactionSvc --> PushNotificationQueue
     PushNotificationQueue --> NotificationSvc[push-notification-svc]
     
-    CustomerSvc --> DynamoDB[(DynamoDB)]
-    NotificationSvc --> DynamoDB
-    AntifraudSvc --> Postgres[(PostgreSQL)]
-    TransactionSvc --> Postgres
+    CustomerSvc --> CustomerDB[(DynamoDB - CustomerDB)]
+    NotificationSvc --> NotificationDB[(DynamoDB - NotificationDB)]
+    AntifraudSvc --> AntifraudDB[(PostgreSQL - AntifraudDB)]
+    TransactionSvc --> TransactionDB[(PostgreSQL - TransactionDB)]
     
     style Client fill:#e1f5fe,color:#000000
     style CoreAPI fill:#f3e5f5,color:#000000
+    
     style PaymentTopic fill:#fff3e0,color:#000000
+
     style CustomerSvc fill:#e8f5e8,color:#000000
     style AntifraudSvc fill:#e8f5e8,color:#000000
     style TransactionSvc fill:#e8f5e8,color:#000000
     style NotificationSvc fill:#e8f5e8,color:#000000
+    
     style PushNotificationQueue fill:#fff3e0,color:#000000
     style TransactionQueue fill:#fff3e0,color:#000000
-    style DynamoDB fill:#ffebee,color:#000000
-    style Postgres fill:#ffebee,color:#000000
+
+    style CustomerDB fill:#ffebee,color:#000000
+    style NotificationDB fill:#ffebee,color:#000000
+    style AntifraudDB fill:#ffebee,color:#000000
+    style TransactionDB fill:#ffebee,color:#000000
 ```
 
 ## Ambientes Docker
