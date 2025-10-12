@@ -16,10 +16,10 @@ flowchart LR
     Client[Cliente] --> CoreAPI[Core API]
     CoreAPI --> PaymentTopic[payment_topic]
     
-    PaymentTopic --> CustomerSvc[customer-svc]
+    PaymentTopic --> AccountSvc[account-svc]
     PaymentTopic --> AntifraudSvc[antifraud-svc]
     
-    CustomerSvc --> PushNotificationQueue[push_notification_queue]
+    AccountSvc --> PushNotificationQueue[push_notification_queue]
     AntifraudSvc --> PushNotificationQueue
     AntifraudSvc --> TransactionQueue[transaction_queue]
     
@@ -27,7 +27,7 @@ flowchart LR
     TransactionSvc --> PushNotificationQueue
     PushNotificationQueue --> NotificationSvc[push-notification-svc]
     
-    CustomerSvc --> CustomerDB[(DynamoDB - CustomerDB)]
+    AccountSvc --> AccountDB[(DynamoDB - AccountDB)]
     NotificationSvc --> NotificationDB[(DynamoDB - NotificationDB)]
     AntifraudSvc --> AntifraudDB[(PostgreSQL - AntifraudDB)]
     TransactionSvc --> TransactionDB[(PostgreSQL - TransactionDB)]
@@ -37,7 +37,7 @@ flowchart LR
     
     style PaymentTopic fill:#fff3e0,color:#000000
 
-    style CustomerSvc fill:#e8f5e8,color:#000000
+    style AccountSvc fill:#e8f5e8,color:#000000
     style AntifraudSvc fill:#e8f5e8,color:#000000
     style TransactionSvc fill:#e8f5e8,color:#000000
     style NotificationSvc fill:#e8f5e8,color:#000000
@@ -45,7 +45,7 @@ flowchart LR
     style PushNotificationQueue fill:#fff3e0,color:#000000
     style TransactionQueue fill:#fff3e0,color:#000000
 
-    style CustomerDB fill:#ffebee,color:#000000
+    style AccountDB fill:#ffebee,color:#000000
     style NotificationDB fill:#ffebee,color:#000000
     style AntifraudDB fill:#ffebee,color:#000000
     style TransactionDB fill:#ffebee,color:#000000
