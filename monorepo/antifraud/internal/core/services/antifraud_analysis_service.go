@@ -2,7 +2,6 @@ package services
 
 import (
 	"concurrency-simulator/monorepo/antifraud/internal/core/models"
-	"concurrency-simulator/monorepo/antifraud/utils"
 	"database/sql"
 	"regexp"
 
@@ -78,11 +77,4 @@ func (as *AntifraudAnalisysService) saveDataToDatabase(data models.Payment) (boo
 	}
 
 	return true, nil
-}
-
-func NewAntifraudAnalisysService(driver *sql.DB) *AntifraudAnalisysService {
-	return &AntifraudAnalisysService{
-		log:    utils.NewRequestLogger(),
-		driver: driver,
-	}
 }

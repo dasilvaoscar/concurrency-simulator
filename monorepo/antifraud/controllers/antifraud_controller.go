@@ -3,12 +3,9 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 
 	"concurrency-simulator/monorepo/antifraud/internal/core/models"
 	"concurrency-simulator/monorepo/antifraud/internal/core/services"
-	"concurrency-simulator/monorepo/antifraud/utils"
-	"concurrency-simulator/monorepo/shared"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"go.uber.org/zap"
@@ -34,15 +31,4 @@ func (pc *AntifraudController) ProcessMessage(msg *kafka.Message) {
 		payment.Email, payment.Amount, payment.Installments, *payment.Status)
 
 	pc.logger.Info(message)
-}
-
-func NewAntifraudController() *AntifraudController {
-	dbUrl := os.Getenv("DB_URL")
-
-	db := shared.NewPostgresSingleton(dbUrl)
-
-	return &AntifraudController{
-		logger:  utils.NewRequestLogger(),
-		service: services.NewAntifraudAnalisysService(db),
-	}
 }
