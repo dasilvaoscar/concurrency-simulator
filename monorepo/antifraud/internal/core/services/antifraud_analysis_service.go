@@ -1,7 +1,7 @@
 package services
 
 import (
-	"concurrency-simulator/monorepo/antifraud/internal/core/models"
+	"concurrency-simulator/monorepo/shared/topic_messages"
 	"database/sql"
 	"regexp"
 
@@ -22,7 +22,7 @@ type AntifraudAnalisysService struct {
 	driver *sql.DB
 }
 
-func (as *AntifraudAnalisysService) Execute(payment models.Payment) models.Payment {
+func (as *AntifraudAnalisysService) Execute(payment topic_messages.Payment) topic_messages.Payment {
 	highRiskAmount := 50000.0
 	suspiciousInstallmentAmount := 10000.0
 	suspiciousInstallments := 6
@@ -63,7 +63,7 @@ func (as *AntifraudAnalisysService) isSuspiciousName(name string) bool {
 	return match
 }
 
-func (as *AntifraudAnalisysService) saveDataToDatabase(data models.Payment) (bool, error) {
+func (as *AntifraudAnalisysService) saveDataToDatabase(data topic_messages.Payment) (bool, error) {
 	query := `
 		INSERT INTO analysis (first_name, last_name, email, amount, installments, status, created_at) 
 		VALUES ($1, $2, $3, $4, $5, $6, NOW())

@@ -27,8 +27,8 @@ flowchart LR
     TransactionSvc --> PushNotificationQueue
     PushNotificationQueue --> NotificationSvc[push-notification-svc]
     
-    AccountSvc --> AccountDB[(DynamoDB - AccountDB)]
-    NotificationSvc --> NotificationDB[(DynamoDB - NotificationDB)]
+    AccountSvc --> AccountDB[(PostgreSQL - AccountDB)]
+    NotificationSvc --> NotificationDB[(PostgreSQL - NotificationDB)]
     AntifraudSvc --> AntifraudDB[(PostgreSQL - AntifraudDB)]
     TransactionSvc --> TransactionDB[(PostgreSQL - TransactionDB)]
     

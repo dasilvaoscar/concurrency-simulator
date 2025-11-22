@@ -39,28 +39,71 @@ services:
       - concurrency-simulator-network
     depends_on:
       - kafka1
-      - postgres
+      - antifraud_db
+
+  account:
+    container_name: account-svc
+    restart: always
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - REPOSITORY_NAME=./monorepo/account
+    environment:
+      SERVICE_NAME: "account-svc"    
+      KAFKA_BROKER: "kafka1:19092"
+      KAFKA_GROUP_ID: "account-svc-group-1"
+      DB_URL: "postgres://account_user:account_pass@postgres:5432/account_db?sslmode=disable"
+    networks:
+      - concurrency-simulator-network
+    depends_on:
+      - kafka1
+      - account_db
 
   # Infra
-  postgres:
+  antifraud_db:
     image: postgres:15-alpine
-    container_name: postgres-db
+    container_name: antifraud_db
     restart: always
     platform: linux/amd64
     environment:
       POSTGRES_DB: antifraud_db
       POSTGRES_USER: antifraud_user
       POSTGRES_PASSWORD: antifraud_pass
-      PGDATA: /var/lib/postgresql/data/pgdata
+      PGDATA: /var/lib/postgresql/data/pgdata_antifraud
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data_antifraud
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init_antifraud_db.sql
     networks:
       - concurrency-simulator-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U antifraud_user -d antifraud_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  account_db:
+    image: postgres:15-alpine
+    container_name: account_db
+    restart: always
+    platform: linux/amd64
+    environment:
+      POSTGRES_DB: account_db
+      POSTGRES_USER: account_user
+      POSTGRES_PASSWORD: account_pass
+      PGDATA: /var/lib/postgresql/data/pgdata_account
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data_account
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init_account_db.sql
+    networks:
+      - concurrency-simulator-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U account_user -d account_db"]
       interval: 30s
       timeout: 10s
       retries: 3
