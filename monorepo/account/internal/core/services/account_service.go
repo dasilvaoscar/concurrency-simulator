@@ -44,7 +44,7 @@ func (ac *AccountService) accountExists(email string) bool {
 func (ac *AccountService) createAccount(data topic_messages.Payment) bool {
 	query := `
 		INSERT INTO account (first_name, last_name, email, created_at) 
-		VALUES ($1, $2, $3, $4, $5, $6, NOW())
+		VALUES ($1, $2, $3, NOW())
 	`
 
 	_, err := ac.driver.Exec(query, data.FirstName, data.LastName, data.Email)

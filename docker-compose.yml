@@ -1,4 +1,3 @@
-version: '3'
 services:
   # Applications
   core:
@@ -34,7 +33,7 @@ services:
       SERVICE_NAME: "antifraud-svc"    
       KAFKA_BROKER: "kafka1:19092"
       KAFKA_GROUP_ID: "antifraud-svc-group-1"
-      DB_URL: "postgres://antifraud_user:antifraud_pass@postgres:5432/antifraud_db?sslmode=disable"
+      DB_URL: "postgres://antifraud_user:antifraud_pass@antifraud_db:5432/antifraud_db?sslmode=disable"
     networks:
       - concurrency-simulator-network
     depends_on:
@@ -54,7 +53,7 @@ services:
       SERVICE_NAME: "account-svc"    
       KAFKA_BROKER: "kafka1:19092"
       KAFKA_GROUP_ID: "account-svc-group-1"
-      DB_URL: "postgres://account_user:account_pass@postgres:5432/account_db?sslmode=disable"
+      DB_URL: "postgres://account_user:account_pass@account_db:5432/account_db?sslmode=disable"
     networks:
       - concurrency-simulator-network
     depends_on:
@@ -71,12 +70,12 @@ services:
       POSTGRES_DB: antifraud_db
       POSTGRES_USER: antifraud_user
       POSTGRES_PASSWORD: antifraud_pass
-      PGDATA: /var/lib/postgresql/data/pgdata_antifraud
+      PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "5432:5432"
+      - "1111:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data_antifraud
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init_antifraud_db.sql
+      - ./scripts/init_antifraud_db.sql:/docker-entrypoint-initdb.d/init_antifraud_db.sql
     networks:
       - concurrency-simulator-network
     healthcheck:
@@ -94,12 +93,12 @@ services:
       POSTGRES_DB: account_db
       POSTGRES_USER: account_user
       POSTGRES_PASSWORD: account_pass
-      PGDATA: /var/lib/postgresql/data/pgdata_account
+      PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "5432:5432"
+      - "2222:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data_account
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init_account_db.sql
+      - ./scripts/init_account_db.sql:/docker-entrypoint-initdb.d/init_account_db.sql
     networks:
       - concurrency-simulator-network
     healthcheck:
