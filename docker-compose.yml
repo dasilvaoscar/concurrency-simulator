@@ -64,7 +64,7 @@ services:
   # Infra
   antifraud_db:
     image: postgres:15-alpine
-    container_name: postgres-db
+    container_name: antifraud_db
     restart: always
     platform: linux/amd64
     environment:
@@ -87,7 +87,7 @@ services:
 
   account_db:
     image: postgres:15-alpine
-    container_name: postgres-db
+    container_name: account_db
     restart: always
     platform: linux/amd64
     environment:
