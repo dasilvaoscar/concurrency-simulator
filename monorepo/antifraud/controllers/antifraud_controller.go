@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"concurrency-simulator/monorepo/antifraud/internal/core/models"
 	"concurrency-simulator/monorepo/antifraud/internal/core/services"
+	"concurrency-simulator/monorepo/shared/topic_messages"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"go.uber.org/zap"
@@ -19,7 +19,7 @@ type AntifraudController struct {
 func (pc *AntifraudController) ProcessMessage(msg *kafka.Message) {
 	pc.logger.Info("Received message from topic", zap.String("topic", *msg.TopicPartition.Topic), zap.String("message", string(msg.Value)))
 
-	var paymentMsg models.Payment
+	var paymentMsg topic_messages.Payment
 	if err := json.Unmarshal(msg.Value, &paymentMsg); err != nil {
 		pc.logger.Error("Error unmarshalling message", zap.Error(err))
 		return

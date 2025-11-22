@@ -1,4 +1,4 @@
-package models
+package topic_messages
 
 type Payment struct {
 	FirstName    string  `json:"first_name"`
