@@ -13,7 +13,7 @@ ARG REPOSITORY_NAME
 
 COPY go.mod go.sum ./
 
-COPY monorepo/ ./monorepo/
+COPY services/ ./services/
 
 RUN go mod download
 

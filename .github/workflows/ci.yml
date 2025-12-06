@@ -43,12 +43,12 @@ jobs:
 
             // Categorização das mudanças por serviço
             const services = {
-              core: files.filter(f => f.filename.includes('monorepo/core')),
-              antifraud: files.filter(f => f.filename.includes('monorepo/antifraud')),
-              customer: files.filter(f => f.filename.includes('monorepo/customer')),
-              notification: files.filter(f => f.filename.includes('monorepo/notification')),
-              transaction: files.filter(f => f.filename.includes('monorepo/transaction')),
-              shared: files.filter(f => f.filename.includes('monorepo/shared')),
+              core: files.filter(f => f.filename.includes('services/core')),
+              antifraud: files.filter(f => f.filename.includes('services/antifraud')),
+              customer: files.filter(f => f.filename.includes('services/customer')),
+              notification: files.filter(f => f.filename.includes('services/notification')),
+              transaction: files.filter(f => f.filename.includes('services/transaction')),
+              shared: files.filter(f => f.filename.includes('services/shared')),
               observability: files.filter(f => f.filename.includes('observability')),
               docs: files.filter(f => f.filename.includes('docs'))
             };
