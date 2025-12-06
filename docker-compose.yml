@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - REPOSITORY_NAME=./monorepo/core
+        - REPOSITORY_NAME=./services/core
     environment:
       HTTP_SERVER_PORT: "8082"
       SERVICE_NAME: "core-svc"    
@@ -28,7 +28,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - REPOSITORY_NAME=./monorepo/antifraud
+        - REPOSITORY_NAME=./services/antifraud
     environment:
       SERVICE_NAME: "antifraud-svc"    
       KAFKA_BROKER: "kafka1:19092"
@@ -48,7 +48,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - REPOSITORY_NAME=./monorepo/account
+        - REPOSITORY_NAME=./services/account
     environment:
       SERVICE_NAME: "account-svc"    
       KAFKA_BROKER: "kafka1:19092"
