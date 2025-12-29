@@ -17,6 +17,8 @@ type AccountController struct {
 }
 
 func (pc *AccountController) ProcessMessage(msg *kafka.Message) {
+	pc.logger.Info("Received message from topic", zap.String("topic", *msg.TopicPartition.Topic), zap.String("message", string(msg.Value)))
+
 	var accountMessage topic_messages.Payment
 	if err := json.Unmarshal(msg.Value, &accountMessage); err != nil {
 		return
