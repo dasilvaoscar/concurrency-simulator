@@ -71,7 +71,7 @@ func PaymentHandler(w http.ResponseWriter, r *http.Request, kafkaProducer *kafka
 	message := &kafka.Message{
 		TopicPartition: kafka.TopicPartition{
 			Topic:     &topic,
-			Partition: kafka.PartitionAny,
+			Partition: shared.PartitionAlias["starting"],
 		},
 		Value: jsonMessage,
 	}

@@ -1,1 +1,1 @@
-clear && docker-compose up --build
+clear && docker compose up --build
