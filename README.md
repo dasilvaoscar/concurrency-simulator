@@ -2,7 +2,10 @@
 
 ## Descrição 
 
-Um monorepo com um sistema de pagamentos simulado e gestão de contas familiar.
+Inicialmente esse repositório foi criado para simular um sistema de pagamento com alta concorrência. Porém passei a usa-lo como meu projeto de TCC 
+da minha pós-graduação de arquitetura.
+
+Esse projeto é um monorepo com com um sistema de pagamentos simulado e gestão de contas familiar em construção.
 
 ## Requisitos
 
