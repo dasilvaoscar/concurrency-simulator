@@ -28,6 +28,39 @@ flowchart TB
 
 ## Arquitetura
 
+### Despesas
+
+```mermaid
+---
+config:
+  theme: redux
+  layout: dagre
+  look: neo
+---
+flowchart LR
+    n14["Client WEB"] --> n1["Lambda - Core API - Expenses Publisher"]
+    n21["Client Mobile"] --> n1
+    n1 --> n3@{ label: "Expenses<span style=\"color:\"> Topic</span>" }
+    n3 --> n6["SQS - Transaction Queue"]
+    n6 --> n22["Lambda - Expenses Service"]
+    n22 --> n18["Postgres - Expenses DB"]
+
+    n14@{ shape: rect}
+    n1@{ shape: rect}
+    n21@{ shape: rect}
+    n3@{ shape: hex}
+    n6@{ shape: h-cyl}
+    n22@{ shape: rect}
+    n18@{ shape: cyl}
+     n14:::Rose
+     n21:::Sky
+     n6:::Peach
+     n18:::Sky
+    classDef Rose stroke-width:1px, stroke-dasharray:none, stroke:#FF5978, fill:#FFDFE5, color:#8E2236
+    classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
+    classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
+```
+
 ### Banking
 
 ```mermaid
@@ -38,7 +71,7 @@ config:
   look: neo
 ---
 flowchart LR
-    n1["Lambda - Core API"] --> n3["Payment Topic"]
+    n1["Lambda - Core API - Payments Publiser"] --> n3["Payment Topic"]
     n3 --> n4["SQS - Antifraud Queue"] & n6["SQS - Transaction Queue"] & n15["SQS - Notification Queue"]
     n4 --> n5["Lambda - Antifraud Service"]
     n6 --> n7["Lambda - Transaction Service"]
