@@ -43,12 +43,12 @@ config:
   look: neo
 ---
 flowchart LR
-    n14["Client WEB"] --> n1["Lambda - Core API - Expenses Publisher"]
+    n14["Client WEB"] --> n1["Lambda - Expenses Service - Publisher"]
     n21["Client Mobile"] --> n1
     n1 --> n3@{ label: "Expenses<span style=\"color:\"> Topic</span>" }
     n3 --> n6["SQS - Transaction Queue"]
-    n6 --> n22["Lambda - Expenses Service"]
-    n22 --> n18["Postgres - Expenses DB"]
+    n6 --> n22["Lambda - Expenses Service - Consumer"]
+    n22 --> n18["Postgres - Expenses DB"] & n24(["External API - Interest Rate"])
     n18 --> n23["Lambda - DB Trigger - Alert Service"]
 
     n14@{ shape: rect}
@@ -63,9 +63,11 @@ flowchart LR
      n21:::Sky
      n6:::Peach
      n18:::Sky
+     n24:::Ash
     classDef Rose stroke-width:1px, stroke-dasharray:none, stroke:#FF5978, fill:#FFDFE5, color:#8E2236
     classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
     classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
+    classDef Ash stroke-width:1px, stroke-dasharray:none, stroke:#999999, fill:#EEEEEE, color:#000000
 ```
 
 ### Banking
@@ -78,15 +80,18 @@ config:
   look: neo
 ---
 flowchart LR
-    n1["Lambda - Core API - Payments Publiser"] --> n3["Payment Topic"]
+    n1["Lambda - Payments Service - Publiser"] --> n3["Payment Topic"]
     n3 --> n4["SQS - Antifraud Queue"] & n6["SQS - Transaction Queue"] & n15["SQS - Notification Queue"]
-    n4 --> n5["Lambda - Antifraud Service"]
-    n6 --> n7["Lambda - Transaction Service"]
+    n4 --> n5["Lambda - Antifraud Service - Consumer"]
+    n6 --> n7["Lambda - Transaction Service - Consumer"]
     n14["Client WEB"] --> n1
     n15 --> n16["Lambda - Notification Service"]
     n5 --> n18["Postgres - Antifraud DB"]
+    n5 -- status_update --> n3
     n7 --> n19["Postgres - Transaction DB"]
+    n7 -- status_update --> n3
     n16 --> n20["Postgres - Notification DB"]
+    n16 -- status_update --> n3
     n21["Client Mobile"] --> n1
 
     n1@{ shape: rect}
