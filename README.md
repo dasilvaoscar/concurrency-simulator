@@ -1,11 +1,13 @@
 # Harmonia Financeira
 
+## Contexto
+
+Inicialmente esse repositório foi criado para simular um sistema de pagamento com alta concorrência. Porém passei a usa-lo como meu projeto de [TCC](https://docs.google.com/document/d/1JjoOGEuK71dnkTWEYsoSsqkzM1umRoWZ/edit?usp=sharing&ouid=113161032001964584333&rtpof=true&sd=true)
+da **pós-graduação de arquitetura**.
+
 ## Descrição 
 
-Inicialmente esse repositório foi criado para simular um sistema de pagamento com alta concorrência. Porém passei a usa-lo como meu projeto de TCC 
-da pós-graduação de arquitetura.
-
-Esse projeto é um monorepo com com um sistema de pagamentos simulado e gestão de contas familiar em construção.
+Esse projeto é um monorepo com um sistema de pagamentos simulado e gestão de contas familiar em construção.
 
 ## Requisitos
 
@@ -129,3 +131,4 @@ docker compose up
 
 - [Reset de tópico no Kafka](./docs/kafka/como_deletar_topico.md)
 - [Teste de envio de pagamento](./docs/http/POST.http)
+- [Doc do TCC](https://docs.google.com/document/d/1JjoOGEuK71dnkTWEYsoSsqkzM1umRoWZ/edit?usp=sharing&ouid=113161032001964584333&rtpof=true&sd=true)
