@@ -86,7 +86,7 @@ flowchart LR
     n6 --> n7["Lambda - Transaction Service - Consumer"]
     n14["Client WEB"] --> n1
     n15 --> n16["Lambda - Notification Service"]
-    n5 --> n18["Postgres - Antifraud DB"] & n22["External - Bacen"]
+    n5 --> n18["Postgres - Antifraud DB"] & n22["External - Dock"]
     n5 -- status_update --> n3
     n7 --> n19["Postgres - Transaction DB"] & n22
     n7 -- status_update --> n3
