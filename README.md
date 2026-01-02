@@ -26,9 +26,6 @@ config:
 flowchart TB
     n1(["Banking"]) --> n2["Pix"] & n3["Boleto"] & n5["TED"]
     A(["Gestão de gastos"]) --> n4["Dashboards - Indicadores de gastos exacerbados"] & n6["Alerta de gastos"] & n7["Unificação de controle de cartões de crédito"] & n8["Taxa de juros e influência em cada despesa"]
-    n9["Domínios"] --> A & n1
-
-    n9@{ shape: hex}
 ```
 
 ## Arquitetura
