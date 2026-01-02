@@ -86,14 +86,13 @@ flowchart LR
     n6 --> n7["Lambda - Transaction Service - Consumer"]
     n14["Client WEB"] --> n1
     n15 --> n16["Lambda - Notification Service"]
-    n5 --> n18["Postgres - Antifraud DB"] & n22["Bacen"]
+    n5 --> n18["Postgres - Antifraud DB"] & n22["External - Bacen"]
     n5 -- status_update --> n3
     n7 --> n19["Postgres - Transaction DB"] & n22
     n7 -- status_update --> n3
-    n16 --> n20["Postgres - Notification DB"] & n23["(SMS) AWS SNS"]
+    n16 --> n20["Postgres - Notification DB"] & n23["External - (SMS) AWS SNS"] & n24["External - (E-MAIL) SES or SEND GRID"]
     n16 -- status_update --> n3
     n21["Client Mobile"] --> n1
-    n16 --> n24["(E-MAIL) SES or SEND GRID"]
 
     n1@{ shape: rect}
     n3@{ shape: hex}
@@ -108,9 +107,9 @@ flowchart LR
     n22@{ shape: rounded}
     n19@{ shape: cyl}
     n20@{ shape: cyl}
-    n21@{ shape: rect}
     n23@{ shape: rounded}
     n24@{ shape: rounded}
+    n21@{ shape: rect}
      n4:::Peach
      n6:::Peach
      n15:::Peach
@@ -119,9 +118,9 @@ flowchart LR
      n22:::Ash
      n19:::Sky
      n20:::Sky
-     n21:::Sky
      n23:::Ash
      n24:::Ash
+     n21:::Sky
     classDef Rose stroke-width:1px, stroke-dasharray:none, stroke:#FF5978, fill:#FFDFE5, color:#8E2236
     classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
     classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
