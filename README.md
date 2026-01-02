@@ -81,7 +81,9 @@ config:
 ---
 flowchart LR
     n1["Lambda - Payments Service - Publiser"] --> n3["Payment Topic"]
-    n3 --> n4["SQS - Antifraud Queue"] & n6["SQS - Transaction Queue"] & n15["SQS - Notification Queue"]
+    n3 -- 1 --> n4["SQS - Antifraud Queue"]
+    n3 -- 2 --> n6["SQS - Transaction Queue"]
+    n3 -- 3 --> n15["SQS - Notification Queue"]
     n4 --> n5["Lambda - Antifraud Service - Consumer"]
     n6 --> n7["Lambda - Transaction Service - Consumer"]
     n14["Client WEB"] --> n1
