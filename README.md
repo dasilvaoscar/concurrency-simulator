@@ -45,7 +45,7 @@ flowchart LR
     n1 --> n3@{ label: "Expenses<span style=\"color:\"> Topic</span>" }
     n3 --> n6["SQS - Transaction Queue"]
     n6 --> n22["Lambda - Expenses Service - Consumer"]
-    n22 --> n18["Postgres - Expenses DB"] & n24(["External - Interest Rate"])
+    n22 --> n18["Postgres - Expenses DB"] & n24(["External - Interest Rate - BACEN"])
     n18 --> n23["Lambda - DB Trigger - Alert Service"]
 
     n14@{ shape: rect}
