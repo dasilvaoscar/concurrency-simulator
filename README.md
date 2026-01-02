@@ -1,8 +1,8 @@
-# Concurrency Simulator
+# Harmonia Financeira
 
 ## Descrição 
 
-Um monorepo com um sistema de pagamentos simulado, com o objetivo de treinar alguns conceitos importantes e ferramentas que eu acho interessantes de se testar
+Um monorepo com um sistema de pagamentos simulado e gestão de contas familiar.
 
 ## Requisitos
 
