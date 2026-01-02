@@ -44,6 +44,7 @@ flowchart LR
     n3 --> n6["SQS - Transaction Queue"]
     n6 --> n22["Lambda - Expenses Service"]
     n22 --> n18["Postgres - Expenses DB"]
+    n18 --> n23["Lambda - DB Trigger - Alert Service"]
 
     n14@{ shape: rect}
     n1@{ shape: rect}
@@ -52,6 +53,7 @@ flowchart LR
     n6@{ shape: h-cyl}
     n22@{ shape: rect}
     n18@{ shape: cyl}
+    n23@{ shape: rect}
      n14:::Rose
      n21:::Sky
      n6:::Peach
