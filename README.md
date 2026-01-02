@@ -89,7 +89,7 @@ flowchart LR
     n5 -- status_update --> n3
     n7 --> n19["Postgres - Transaction DB"] & n22
     n7 -- status_update --> n3
-    n16 --> n20["Postgres - Notification DB"] & n23["External - (SMS) AWS SNS"] & n24["External - (E-MAIL) SES or SEND GRID"]
+    n16 --> n20["Postgres - Notification DB"] & n23["External - (SMS) Twilio or AWS SNS"] & n24["External - (E-MAIL) AWS SES or SEND GRID"]
     n16 -- status_update --> n3
     n21["Client Mobile"] --> n1
 
